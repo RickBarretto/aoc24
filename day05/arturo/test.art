@@ -3,11 +3,11 @@ import {unitt}!
 import ./{solution}!
 
 private: #[
-    local: "../data/rick.txt"
+    file: "../data/rick.txt"
     expected: 6267
 ]
 
-skipPersonal?: not? exists? privateInput\local
+skipPersonal?: not? exists? private\file
 
 test "Sample data should be 143" [
     actual: resultFrom "../data/sample.txt"
