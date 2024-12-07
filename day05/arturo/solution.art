@@ -30,8 +30,8 @@ resultFrom: $[file :string][
 	orderingRules: (
 		file | select => [in? "|" &]
 			 | map => [split.by: "|" &]
-			 | gather => [first &]
-			 | map [ref, pre] -> @[ref map pre => [last &]]
+			 | gather => first
+			 | map [ref, pre] -> @[ref map pre => last]
 			 | flatten.once 
 			 | dictionary.raw
 	)
