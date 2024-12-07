@@ -1,0 +1,60 @@
+;; module: "AOC24 - Day 05"
+;; author: "RickBarretto" 
+;; license: {
+;;		This Source Code Form is subject to the terms of the Mozilla Public
+;;  	License, v. 2.0. If a copy of the MPL was not distributed with this
+;; 		file, You can obtain one at https://mozilla.org/MPL/2.0/.
+;; }
+
+
+ordered?: $[request :block][
+    [reqs rules]: @[request orderingRules]
+	max: sub size reqs 1
+	next: $ => [get reqs inc &]
+	
+	reqs | select => [in? & keys rules]
+		 | take max
+	     | map.with: 'i [page]
+			-> in? (next i) (get rules page)
+		 | all?
+]
+
+middle: $[blk :block][
+	get blk (div (size blk) 2)
+]
+
+resultFrom: $[file :string][
+
+	file: read.lines file 
+
+	orderingRules: (
+		file | select => [in? "|" &]
+			 | map => [split.by: "|" &]
+			 | gather => [first &]
+			 | map [ref, pre] -> @[ref map pre => [last &]]
+			 | flatten.once 
+			 | dictionary.raw
+	)
+
+	updateRequests: (
+		file | select => [in? "," &]
+			 | map => [split.by: "," &]
+	)
+
+	toUpdate: select updateRequests => ordered?
+
+	toUpdate
+		| map => [to :integer middle &]
+		| sum
+]
+
+if standalone? [
+	; print orderingRules
+	; print "---"
+	; print updateRequests
+	; print "---"
+	; print toUpdate
+
+	;; main
+	print resultFrom "../data/rick.txt"
+]
