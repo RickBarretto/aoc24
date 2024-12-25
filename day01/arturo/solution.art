@@ -1,0 +1,31 @@
+;; module: "AOC24 - Day 01"
+;; author: "RickBarretto" 
+;; license: {
+;;		This Source Code Form is subject to the terms of the Mozilla Public
+;;  	License, v. 2.0. If a copy of the MPL was not distributed with this
+;; 		file, You can obtain one at https://mozilla.org/MPL/2.0/.
+;; }
+
+distances: $[left right][
+    ensure -> equal? size left size right
+    
+    couple left right
+        | map [pair] => [sub first pair last pair]
+        | map => [abs &]
+]
+
+resultFrom: $[file :string][
+    file: read.lines file 
+
+    [left right]: to [:block[:integer]] file 
+        | map => [split.by: " " &]
+        | map => [remove & ""]
+        | decouple
+        | map => [sort &]
+
+    sum distances left right
+]
+
+if standalone? [
+	inspect resultFrom ./"../data/sample.txt"
+]
