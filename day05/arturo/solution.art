@@ -8,6 +8,8 @@
 
 
 ordered?: $[request :block][
+	;; Checks if a request follows the ordering rules
+
     [reqs rules]: @[request orderingRules]
 	max: sub size reqs 1
 	next: $ => [get reqs inc &]
@@ -20,6 +22,7 @@ ordered?: $[request :block][
 ]
 
 middle: $[blk :block][
+	;; Gets the middle element of a block
 	get blk (div (size blk) 2)
 ]
 
@@ -27,22 +30,25 @@ resultFrom: $[file :string][
 
 	file: read.lines file 
 
+	; Extracts the ordering rules into a dictionary
 	orderingRules: (
-		file | select => [in? "|" &]
-			 | map => [split.by: "|" &]
-			 | gather => first
-			 | map [ref, pre] -> @[ref map pre => last]
+		file | select => [in? "|" &]	; All lines with '|' contains a rule.
+			 | map => [split.by: "|" &]	; Precedence rule is separated by '|'.
+			 | gather => first			; The first element is the reference page.	
+			 | map [ref, pre] -> @[ref, map pre => last]
 			 | flatten.once 
 			 | dictionary.raw
 	)
 
 	updateRequests: (
-		file | select => [in? "," &]
+		file | select => [in? "," &]	; All lines with ',' contains an update request
 			 | map => [split.by: "," &]
 	)
 
+	; Selects the update requests that follow the ordering rules
 	toUpdate: select updateRequests => ordered?
 
+	; Extracts the middle element of each request and sums them
 	toUpdate
 		| map => [to :integer middle &]
 		| sum
