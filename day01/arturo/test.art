@@ -1,0 +1,22 @@
+import {unitt}!
+
+import ./{solution}!
+
+private: #[
+    file: "../data/rick.txt"
+    expected: 0 ; to discover
+]
+
+skipPersonal?: not? exists? private\file
+
+test "Sample data should be 11" [
+    actual: resultFrom "../data/sample.txt"
+    assert -> 11 = actual
+]
+
+test.skip: skipPersonal? "Personal input data should be ..." [
+    expected: private\expected
+    actual: resultFrom private\file
+    
+    assert -> expected = actual
+]
