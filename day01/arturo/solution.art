@@ -6,13 +6,16 @@
 ;; 		file, You can obtain one at https://mozilla.org/MPL/2.0/.
 ;; }
 
+distance: $[a :integer b :integer][
+    abs (a - b)
+]
+
 distances: $[left right][
     ensure.that: "can be properly coupled" 
         -> equal? size left size right
     
     couple left right
-        | map [pair] => [sub first pair last pair]
-        | map => [abs &]
+        | map [pair] -> distance pair\0 pair\1
 ]
 
 resultFrom: $[file :string][
