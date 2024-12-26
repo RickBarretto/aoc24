@@ -7,7 +7,8 @@
 ;; }
 
 distances: $[left right][
-    ensure -> equal? size left size right
+    ensure.that: "can be properly coupled" 
+        -> equal? size left size right
     
     couple left right
         | map [pair] => [sub first pair last pair]
