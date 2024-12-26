@@ -1,0 +1,39 @@
+;; module: "AOC24 - Day 03"
+;; author: "RickBarretto" 
+;; license: {
+;;		This Source Code Form is subject to the terms of the Mozilla Public
+;;  	License, v. 2.0. If a copy of the MPL was not distributed with this
+;; 		file, You can obtain one at https://mozilla.org/MPL/2.0/.
+;; }
+
+
+validInstructions: $[stream :string][
+	;; finds all "mul(num,num)" values
+	;; note: 
+	;;	all function parameters should have between 1 and 3 digits.
+	;; 	they must be separated by a comma, without whitespace.
+
+	param: "\d{1,3}" 
+
+	match.capture stream to :regex join @[
+		"mul"			; function name
+		"\("			; open parenthesis		
+		~"(|param|)"	; first parameter
+		","				; comma separator
+		~"(|param|)"	; second parameter
+		"\)"			; close parenthesis
+	]
+]
+
+resultFrom: $[file :string][
+	read file
+		| validInstructions
+		| map => [to [:integer] &]
+		| map => product
+		| sum
+]
+
+if standalone? [
+	ensure -> 161 = print <= resultFrom ./"../data/sample.txt"
+	ensure -> 188116424 = print <= resultFrom ./"../data/rick.txt"
+]
