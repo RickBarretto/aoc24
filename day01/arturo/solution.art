@@ -25,7 +25,7 @@ resultFrom: $[file :string][
         | map => [split.by: " " &]
         | map => [remove & ""]
         | decouple
-        | map => [sort &]
+        | map => sort
 
     sum distances left right
 ]
